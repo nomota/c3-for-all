@@ -28,7 +28,7 @@ fn int main(String[] args)
 
 import std::io;
 
-fn void main() @WinMain
+fn void main() @winmain
 {
     io::printf("Hello, world!\n");
 }
