@@ -19,13 +19,16 @@ fn void print_race(int[] positions)
         io::printf("|");
         for (int j = 0; j < TRACK_LENGTH; j++)
         {
-            if (j == positions[i]) io::printf("🐎");
-            else io::printf("-");
+            if (j == positions[i]) {
+                io::printf("🐎");
+            } else {
+                io::printf("-");
+            }
         }
         io::printf("| (Horse %d)\n", i + 1);
     }
 
-    io::stdout().fflush(); 
+    io::stdout().flush(); 
 }
 
 fn int main()
@@ -44,13 +47,13 @@ fn int main()
         positions[i] = TRACK_LENGTH - 1;
     }
 
-    print_race(positions);
+    print_race(&positions);
     
     while (total_winners == 0)
     {
         for (int i = 0; i < NUM_HORSES; i++)
         {
-            positions[i] -= randome::rand() % 3; 
+            positions[i] -= random::rand(3); 
 
             if (positions[i] <= 0)
             {
@@ -64,12 +67,12 @@ fn int main()
         
         io::printf("\033[%dA", NUM_HORSES);
 
-        print_race(positions);    
+        print_race(&positions);    
     }
 
-    winner = winners[ random::rand() % total_winners ];
+    winner = winners[ random::rand(total_winners) ];
     
-    printf("\n🏆 Horse %d wins the race!\n", winner + 1);
+    io::printf("\n🏆 Horse %d wins the race!\n", winner + 1);
 
     return 0;
 }
