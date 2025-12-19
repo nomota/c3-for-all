@@ -1,14 +1,8 @@
-/************************************
-*
-* Program: Horse Race
-*
-* Description: A horse race 'game' for the terminal in C3.
-*
-* YouTube Lesson: https://www.youtube.com/watch?v=I8mZ5m-6TF0
-*
-* Author: Kevin Browne @ https://portfoliocourses.com
-*
-***********************************/
+// Program: Horse Race
+// Description: A horse race 'game' for the terminal in C3.
+// YouTube Lesson: https://www.youtube.com/watch?v=I8mZ5m-6TF0
+// Author: Kevin Browne @ https://portfoliocourses.com
+
 
 import std::io;
 import std::math::random;
