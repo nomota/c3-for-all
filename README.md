@@ -40,12 +40,12 @@ C3 is an evolution of C and a minimalist systems programming language.
 - Generic modules make extending code easier.
 - Simple struct composition and reuse with struct subtyping.
 
-### Macros Without a PhD
+### Simple Macros
 
 - Macros can be similar to normal functions.
 - Or write code that understands the types in your code.
 
 ---
 
-**Next:** [C3 in a nutshel](./contents/00.table-of-contents.md)
+**Next:** [C3 Guide for All](./contents/00.table-of-contents.md)
 
