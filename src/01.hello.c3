@@ -17,8 +17,23 @@ fn int main(String[] args)
 {
    io::printf("Hello, world!\n");
 
-   for (usz i = 0; i < args.len; i++) {
-        io::printf("%s\n", arg);
+   for (int i = 0; i < args.len; i++) {
+        io::printf("%d: %s\n", i, arg);
+    }
+
+    return 0;
+}
+
+// args and return
+
+import std::io;
+
+fn int main(String[] args) 
+{
+   io::printf("Hello, world!\n");
+
+   foreach (i, arg : args) {
+        io::printf("%d: %s\n", i, arg);
     }
 
     return 0;
