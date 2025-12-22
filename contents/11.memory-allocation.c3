@@ -9,9 +9,8 @@ There are mutiple memory allocators available in C3.
 * BackedArena allocator
 * DynamicArena allocator
 * OnStack allocator
-* SimpleHeap allocator
 
-All allocators conform `interface Allocator` reuiement and they are interchangeable.
+All allocators conform `interface Allocator` reuiement and they are inter-changeable.
 
 Two allocators are defined as `@builtin` so as to be used easily.
 
