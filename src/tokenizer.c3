@@ -2,9 +2,9 @@
 /*
   a generic string tokenizer
 
-  Tokenizer {StringType} tokenizer; // StrType = String | ZString | DString | WString
+  Tokenizer {StringType} tokenizer; // StringType = String | ZString | DString | WString
   tokenizer.init(str_of_same_type, delimiters=" \t\r\n");
-  List {RetType} list; // RetType = String | Char16[]
+  List {ReturnType} list; // ReturnType = String | Char16[](only for WString)
   while (try t = tokenizer.next()) {
      list.push(token);
   }
