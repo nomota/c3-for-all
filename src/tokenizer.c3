@@ -121,46 +121,46 @@ import std::collections;
 
 fn void test_String() // @test
 {
-    String s = " Hello, World ! ";
-    Tokenizer {String} tok;
-    tok.init(s, " ,");
-    List {String} list;
-    while (try t = tok.next()) {
-        list.push(t);
+    String str = " Hello, World ! ";
+    Tokenizer {String} tokenizer;
+    tokenizer.init(str, " ,");
+    List {String} tokens;
+    while (try token = tokenizer.next()) {
+        tokens.push(token);
     }
     String[] expected = {"Hello", "World", "!"};
-    foreach(i, item: list) {
-        assert(expected[i] == item);
+    foreach(i, token: tokens) {
+        assert(expected[i] == token);
    }
 }
 
 fn void test_ZString() // @test
 {
-    ZString s = " Hello , World !  ";
-    Tokenizer {ZString} tok;
-    tok.init(s," ,");
-    List {String} list;
-    while (try t = tok.next()) {
-        list.push(t);
+    ZString str = " Hello , World !  ";
+    Tokenizer {ZString} tokenizer;
+    tokenizer.init(str," ,");
+    List {String} tokens;
+    while (try token = tokenizer.next()) {
+        tokens.push(token);
     }
     String[] expected = {"Hello", "World", "!"};
-    foreach(i, item: list) {
-        assert(expected[i] == item);
+    foreach(i, token: tokens) {
+        assert(expected[i] == token);
    }
 }
 
 fn void test_DString() // @test
 {
-    DString s = dstring::new(tmem, " Hello, World ! ");
-    Tokenizer {DString} tok;
-    tok.init(s, " ,");
-    List {String} list;
-    while (try t = tok.next()) {
-        list.push(t);
+    DString str = dstring::new(tmem, " Hello, World ! ");
+    Tokenizer {DString} tokenizer;
+    tokenizer.init(str, " ,");
+    List {String} tokens;
+    while (try token = tokenizer.next()) {
+        tokens.push(token);
     }
     String[] expected = {"Hello", "World", "!"};
-    foreach(i, item: list) {
-        assert(expected[i] == item);
+    foreach(i, token: tokens) {
+        assert(expected[i] == token);
    }
 }
 
@@ -187,17 +187,16 @@ fn void test_WString() // @test
 {
     String s_utf8 = "♡ Hello , 세상 !  ";
     Char16[] s_char16 = utf8_char16(s_utf8);
-    WString s = (WString) s_char16;
-    Tokenizer {WString} tok;
-    tok.init(s,"♡ ,");
-    List {Char16[]} list;
-    while (try t = tok.next()) {
-        list.push(t);
+    WString str = (WString) s_char16;
+    Tokenizer {WString} tokenizer;
+    tokenizer.init(str,"♡ ,");
+    List {Char16[]} tokens;
+    while (try token = tokenizer.next()) {
+        tokens.push(token);
     }
     String[] expected = {"Hello", "세상", "!"};
-    foreach(i, item: list) {
-        io::printn(item);
-        assert(equals(item, expected[i]));
+    foreach(i, token: tokens) {
+        assert(equals(token, expected[i]));
    }
 }
 
