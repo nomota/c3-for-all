@@ -15,8 +15,6 @@ faultdef NO_MORE_TOKEN; // placed here because generic module doesn't allow faul
 
 module std::core::string::tokenizer {StrType};
 
-import std::io;
-
 struct Tokenizer {
     StrType buffer @if(StrType != DString);
     char[] buffer @if(StrType == DString);
