@@ -4,9 +4,9 @@
 
   Tokenizer {StringType} tokenizer; // StringType = String | ZString | DString | WString
   tokenizer.init(str_of_same_type, delimiters=" \t\r\n");
-  List {ReturnType} list; // ReturnType = String | Char16[](only for WString)
-  while (try t = tokenizer.next()) {
-     list.push(token);
+  List {TokenType} tokens; // TokenType = String | Char16[](only for WString)
+  while (try token = tokenizer.next()) {
+     tokens.push(token);
   }
 */
 
