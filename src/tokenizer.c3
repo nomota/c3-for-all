@@ -44,7 +44,7 @@ macro void Tokenizer.init(&self, buffer, String delimiters=" \t\r\n")
     self.index = 0;
 }
 
-macro bool Tokenizer.is_end(&self) 
+fn bool Tokenizer.is_end(&self) 
 {
       $if StrType == String || StrType == DString: 
         if (self.index >= self.buffer.len) return true;
@@ -61,7 +61,7 @@ macro bool Tokenizer.is_end(&self)
     return false;
 }
 
-macro bool Tokenizer.is_delim(&self) 
+fn bool Tokenizer.is_delim(&self) 
 {
     $if StrType != WString:
         char c = self.buffer[self.index];
@@ -78,7 +78,7 @@ macro bool Tokenizer.is_delim(&self)
     return false;
 }
 
-macro Tokenizer.next(&self) // String? or Char16[]?
+macro Tokenizer.next(&self) // returns String? or Char16[]?
 {
     while (true) {
         if (self.is_end()) break;
