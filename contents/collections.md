@@ -55,10 +55,10 @@ void list.init_wrapping_array(allocx, Type[] array);
 If you want to print the entire list using `io::printfn()` with `%s` spefifier, define following `@dynamic` function.
 
 ```c3
-usz? List{Type}.to_format(Formatter* f) @dynamic 
+usz? List{Type}.to_format(&self, Formatter* f) @dynamic 
 {
-    // n = f.print(.xxx);
-    // n += f.printf("%x", .yyy);
+    // n = f.print(sel.xxx);
+    // n += f.printf("%x", self.yyy);
     // return n;
 }
 ```
@@ -160,7 +160,7 @@ void sort::quicksort(&list, &cmp);
 void sort::insertionsort(&list, &cmp);
 void sort::countingsort(&list, &cmp);
 
-// for simple arrays, slice[] is ok, because slice is a kind of pointer  
+// for simple arrays, slice is ok, not &slice, because slice is a kind of pointer
 int[] slice = { 1, 3, 9, 6 };
 void sort::quicksort(slice, &cmp);
 
@@ -362,56 +362,64 @@ HashSet* s = set.tinit_from_values(Value[] values, uint capacity = DEFAULT_INITI
 bool b = set.is_initialized();
 HashSet* s = set.init_from_set(allocx, HashSet* other_set);
 HashSet* s = set.tinit_from_set(HashSet* other_set)
+```
 
-bool set.is_empty(&set) @inline
+```c3
+bool b = set.is_empty();
+usz n = set.add_all(Value[] list);
+usz n = set.add_all_from(HashSet* other);
+bool b = set.add(Value value);
+```
 
-usz set.add_all(Value[] list)
+You can iterate by using this macro.
 
-usz set.add_all_from(HashSet* other)
+```c3
+macro HashSet.@each(self; @body(value)); // semicolon separates arguments and trailing body
 
-bool set.add(Value value)
+set.@each(; value) { // semicolon
+    // process with value
+};
+// semicolon
+```
 
-set.@each(set; @body(value))
+```c3
+bool b = set.contains(Value value);
 
-bool set.contains(Value value)
+// return error can be ignored without (void) casting
+void? set.remove(Value value) @maydiscard;
 
-void? set.remove(Value value) @maydiscard
+usz n = set.remove_all(Value[] values);
+usz n = set.remove_all_from(HashSet* other);
+void set.free();
+void set.clear();
+void set.reserve(usz capacity);
 
-usz set.remove_all(Value[] values)
+Value[] vals = set.tvalues();
+Value[] vals = set.values(allocx);
+```
 
-usz set.remove_all_from(HashSet* other)
+Union, intersection, difference, and subset are typical set operations.
 
-void set.free(&set)
+```c3
+HashSet s = set.set_union(allocx, HashSet* other);
+HashSet s = set.tset_union(HashSet* other);
+HashSet s = set.intersection(allocx, HashSet* other);
+HashSet s = set.tintersection(HashSet* other);
+HashSet s =  set.difference(allocx, HashSet* other);
+HashSet s = set.tdifference(HashSet* other);
+HashSet s = set.symmetric_difference(allocx, HashSet* other);
+HashSet s = set.tsymmetric_difference(HashSet* other);
+bool b = set.is_subset(HashSet* other);
+```
 
-void set.clear(&set)
+Using iterater you can enumerate elements in a set.
 
-void set.reserve(usz capacity)
+```c3
+HashSetIterator iter = set.iter();
+Value? val = iter.next();
+usz n = itef.len() @operator(len);
 
-Value[] set.tvalues(&self) => self.values(tmem) @inline;
-
-Value[] set.values(Allocator allocator)
-
-HashSet set.set_union(allocx, HashSet* other)
-
-HashSet set.tset_union(HashSet* other) => self.set_union(tmem, other);
-
-HashSet set.intersection(allocx, HashSet* other)
-
-HashSet set.tintersection(HashSet* other) => self.intersection(tmem, other);
-
-HashSet set.difference(allocx, HashSet* other)
-
-HashSet set.tdifference(HashSet* other) => self.difference(tmem, other) @inline;
-
-HashSet set.symmetric_difference(allocx, HashSet* other)
-
-HashSet set.tsymmetric_difference(HashSet* other) => self.symmetric_difference(tmem, other) @inline;
-
-bool set.is_subset(HashSet* other)
-
-HashSetIterator set.iter(&set) => { .set = set, .bucket_index = 0, .current = null };
-
-Value? HashSetIterator.next(&self)
-
-usz HashSetIterator.len(&self) @operator(len)
+while (try val = iter.next()) {
+    // process with val
+}
 ```
