@@ -276,7 +276,9 @@ module std::collections::map{Key,Value};
 import std::sort; // for quicksort()
 import std::collections::list; // for List{Entry}
 
-<* @param cmp: cmp must compare Key*>
+<* 
+ @param cmp `cmp must compare two Key`
+*>
 macro HashMap.@each_sort_keys(self, cmp; @body(idx, key)) 
 {
     @pool() {
@@ -288,7 +290,9 @@ macro HashMap.@each_sort_keys(self, cmp; @body(idx, key))
     };
 }
 
-<* @param cmp: cmp must compare Entry.value *>
+<* 
+ @param cmp `cmp must compare two Entry{Key,Value} object's .value`
+*>
 macro HashMap.@each_sort_values(self, cmp; @body(idx, value, key)) 
 {
     @pool() {
@@ -311,6 +315,7 @@ module main;
 
 import std::io;
 import std::collections::map;
+import libc; // for strncmp()
 
 // sample key compare function for int key
 fn int key_cmp(int a, int b) 
@@ -320,8 +325,8 @@ fn int key_cmp(int a, int b)
     return 0;
 }
 
-// sample value compare function for map::Entry{int,String}
-fn int entity_value_cmp(map::Entry{int,String} a, map::Entry{int,String} b) 
+// sample value compare function for Entry{int,String}
+fn int entity_value_cmp(Entry{int,String} a, Entry{int,String} b) 
 {
     return libc::strncmp(a.value, b.value, a.value.len);
 }
