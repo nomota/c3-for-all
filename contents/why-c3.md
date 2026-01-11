@@ -75,3 +75,5 @@ C3 lacks these features:
 - smart pointers
 - classes and inheritance
 - exception handling
+
+Back to [Table of Contents](0.table-of-contents.md)

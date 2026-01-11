@@ -47,5 +47,5 @@ C3 is an evolution of C and a minimalist systems programming language.
 
 ---
 
-**Next:** [C3 Guide for All](./contents/00.table-of-contents.md)
+**Next:** [C3 Guide for All](./contents/0.table-of-contents.md)
 

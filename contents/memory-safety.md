@@ -240,5 +240,7 @@ $
 
 ### Memory allocators in C3
 
-Refer to [Memory Allocation](11.memory-allocation.md) to see how to allocate heap memory with safety.
+Refer to [Memory Allocation](memory-allocation.md) to see how to allocate heap memory with safety.
 
+
+Back to [Table of Contents](0.table-of-contents.md)

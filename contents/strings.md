@@ -511,3 +511,6 @@ double? d = hexfloat(char[] chars, int $bits, int $emin, int sign);
 String str;
 $Type i = str.to_integer($Type, int base = 10);
 ```
+
+
+Back to [Table of Contents](0.table-of-contents.md)

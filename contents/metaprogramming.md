@@ -466,4 +466,5 @@ Foo f;
 $typeof(f) x = f;
 ```
 
+Back to [Table of Contents](0.table-of-contents.md)
 
