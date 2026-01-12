@@ -1,0 +1,301 @@
+# Reflection
+
+C3 allows both compile time and runtime reflection, by providing various type properties and $-prefixed type related functions.
+
+#### Type properties
+
+* `<type>.alignof`: alignment in bytes needed for the type.
+
+* `<enum_type>.associated`: a slice containing the types of associated values if any.
+
+```c3
+enum Foo : int (double d, String s)
+{
+    BAR = { 1.0, "normal" },
+    BAZ = { 2.0, "exceptional" }
+}
+String s = Foo.associated[0].nameof; // "double"
+```
+
+* `<float_type>.inf`: a representation of floating point "infinity".
+
+* `<type>.inner`: a typeid to an "inner" type. What this means is different for each type:
+  - Array: array base type.
+  - Bitstruct: underlying base type.
+  - Distinct: underlying type.
+  - Enum: underlying enum base type.
+  - Pointer: type being pointed to.
+  - Vector: vector base type.
+  - not defined for other types.
+
+* `<type>.kindof`: underlying `TypeKind` as defined in std::core::types. (VOID, BOOL, SIGNED_INT, UNSIGNED_INT, FLOAT, TYPEID, FAULT, ANY, ENUM, CONST_ENUM, STRUCT, UNION, BITSTRUCT, FUNC, OPTIONAL, ARRAY, SLICE, VECTOR, DISTINCT, POINER, INTERFACE)
+
+```c3
+TypeKind kind = int.kindof; // TypeKind.SIGNED_INT
+```
+
+* `<array_type>.len`: length of the array.
+
+```c3
+usz len = int[4].len; // 4
+```
+
+* `<int_float_type>.max`: maximum value of the type.
+
+```c3
+ushort max_ushort = ushort.max; // 65535
+```
+
+* `<bitstruct_struct_union_type>.membersof`: a *compile time* list containing the fields in a bitstruct, struct or union. The elements have the *compile time only* type of `member_ref`. 
+  - *Note: As the list is an "untyped" list, you are limited to iterating and accessing it at
+compile time.*
+  - A `member_ref` has properties `alignof`, `kindof`, `membersof`, `nameof`, `offsetof`, `sizeof` and `typeid`.
+
+```c3
+struct Baz
+{
+    int x;
+    Foo* z;
+}
+String x = Baz.membersof[1].nameof; // "z"
+```
+
+* `<struct_type>.methodsof`: methods associated with a type as a slice of strings.
+  - Methods are generally registered *after* types are registered, which means that the use of "methodsof" may return inconsistent results depending on where in the resolution cycle it is invoked.
+  - It is always safe to use inside a function.
+
+* `<int_float_type>.min`: minimum value of the type.
+
+```c3
+ichar min_ichar = ichar.min; // -128
+```
+
+* `<type>.nameof`: name of the type.
+
+* `<enum_type>.names`: a slice containing the names of an enum.
+
+```c3
+enum FooEnum
+{
+    BAR,
+    BAZ
+}
+String[] x = FooEnum.names; // ["BAR", "BAZ"]
+```
+
+* `<functon_type>.paramsof`: a ReflectParam struct for all function parameters.
+
+```c3
+alias TestFunc = fn int(int x, double f);
+String s = TestFunc.paramsof[1].name; // "f"
+typeid t = TestFunc.paramsof[1].type; // double.typeid
+```
+
+* `<bitstruct_struct_type>.parentof`: typeid of the parent type.
+
+```c3
+struct Foo
+{
+    int a;
+}
+
+struct Bar
+{
+    inline Foo f;
+}
+
+String x = Bar.parentof.nameof; // "Foo"
+```
+
+* `<function_type>.returns`: typeid of the return type.
+
+```c3
+alias TestFunc = fn int(int, double);
+String s = TestFunc.returns.nameof; // "int"
+```
+
+* `<type>.sizeof`: size in bytes for the given type.
+
+```c3
+usz x = Foo.sizeof;
+```
+
+* `<type>.typeid`: typeid for the given type. `<alias>.typeid` will return the typeid of the underlying type. The typeid size is the same as that of an `iptr`.
+
+```c3
+typeid x = Foo.typeid;
+```
+
+* `<enum_type>.values`: a slice containing the values of an enum.
+
+```c3
+enum FooEnum
+{
+    BAR,
+    BAZ
+}
+String x = FooEnum.values[1].nameof; // "BAR"
+```
+
+### Compile time functions
+
+There are several built-in functions to inspect the code during compile time.
+
+* `$alignof(val)`: alignment in bytes needed for the type or member.
+
+```c3
+module test::bar;
+
+struct Foo
+{
+    int x;
+    char[] y;
+}
+int g = 123;
+
+$alignof(Foo.x); // => returns 4
+$alignof(Foo.y); // => returns 8 on 64 bit
+$alignof(Foo);   // => returns 8 on 64 bit
+$alignof(g);     // => returns 4
+```
+
+* `$defined(expr)`: `true` when the expression(s) inside are defined and all sub expressions are valid.
+
+```c3
+$defined(Foo);       // => true
+$defined(Foo.x);     // => true
+$defined(Foo.baz);   // => false
+
+Foo foo = {};
+// Check if a method exists:
+$if $defined(foo.call):
+    // Check what the method accepts:
+    $switch :
+       $case $defined(foo.call(1)) :
+           foo.call(1);
+       $default :
+           // do nothing
+    $endswitch
+$endif
+
+// Other way to write that:
+$if $defined(foo.call, foo.call(1)):
+    foo.call(1);
+$endif
+```
+
+* The full list of what `$defined` can check:
+  - `$defined(SomeType a = <expr>)`
+  - `$defined(var $a = <expr>)`
+  - `$defined(*<expr>)`
+  - `$defined(<expr>[<index>])`
+  - `$defined(<expr>[<index>] = <value>)`
+  - `$defined(<expr>.<ident1>.<ident2>)`
+  - `$defined(ident|#ident|@ident|IDENT|$$IDENT|$ident)`
+  - `$defined(Type)`
+  - `$defined(&<expr>)`
+  - `$defined(&&<expr>)`
+  - `$defined($eval(<expr>))`
+  - `$defined(<expr>(<arg0>, ...))`
+  - `$defined(<expr>!!|<expr>!)`
+  - `$defined(<expr>?)`
+  - `$defined(<expr1> binary_operator <expr2>)`
+  - `$defined((<Type>)<expr>)`
+
+* `$eval(str)`: converts a string to the corresponding variable. Limited to a single, optionally path prefixed, identifier. Consequently methods cannot be evaluated directly.
+
+
+```c3
+int a = 123;         // => a is now 123
+$eval("a") = 222;    // => a is now 222
+$eval("mymodule::fooFunc")(a); // => same as mymodule::fooFunc(a)
+
+struct Foo { ... }
+fn int Foo.test(Foo* f) { ... }
+
+fn void test()
+{
+    void* test1 = &$eval("test"); // Works
+    void* test2 = &Foo.$eval("test"); // Works
+    // void* test3 = &$eval("Foo.test"); // Error
+}
+```
+
+* `$evaltype(TypeStr)`: similar to `$eval` but for types:
+
+```c3
+$evaltype("float") f = 12.0f;
+```
+
+* `$extnameof(Type|var|function)`:  external name of a type, variable or function. The external name is
+the one used by the linker.
+
+```c3
+fn void testfn(int x) { }
+String a = $extnameof(g); // => "test.bar.g";
+String b = $extnameof(testfn); // => "test.bar.testfn"
+```
+
+* `$nameof(function|var)`: name of a function or variable as a string without module prefixes.
+
+```c3
+fn void test() { }
+int g = 1;
+
+String a = $nameof(g); // => "g"
+String b = $nameof(test); // => "test"
+```
+
+* `$offsetof(struct.member)`: offset of a member in a struct.
+
+```c3
+Foo z;
+$offsetof(z.y); // => returns 8 on 64 bit, 4 on 32 bit
+```
+
+* `$qnameof(function|var)`: same as `$nameof`, but with the full module name prepended.
+
+```c3
+module abc;
+fn void test() { }
+int g = 1;
+
+String a = $qnameof(g); // => "abc::g"
+String b = $qnameof(test); // => "abc::test"
+```
+
+* `$sizeof(value)`: allocation size needed. `$sizeof(a)` is equivalent
+to doing `$typeof(a).sizeof`.
+
+```c3
+$typeof(a)* x = allocate_bytes($sizeof(a));
+*x = a;
+```
+
+* `$stringify(expr)`: expression as a string. `$stringify` has a special behaviour for handling macro expression parameters, where `$stringify(#foo)` will return the expression contained in `#foo` as a string, exactly as written in the macro call's arguments, rather than simply return `"#foo"`.
+
+```c3
+import std::io;
+
+macro @describe(#expr)
+{
+	io::printfn("The value of `%s` is `%s`.", $stringify(#expr), #expr);
+}
+
+fn void main()
+{
+	@describe(isz.sizeof);
+  //Prints:
+  //  The value of `isz.sizeof` is `8`.
+}
+```
+
+* `$typeof(expr | var)`: type of an expression or variable.
+
+```c3
+Foo f;
+$typeof(f) x = f;
+```
+
+
+Back to [Table of Contents](0.table-of-contents.md)
