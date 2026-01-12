@@ -182,6 +182,6 @@ for(usz i = 0; i < n; i++) {
 
 * Note: `net::accept()` of non-blocking server socket returns a non-blocking socket.
 
-* Note: If `net::connect()` of non-blocking socket is fully connected, `POLL_EVENT_READ` event gets fired.
+* Note: If `net::connect()` of non-blocking socket is successfully connected, `POLL_EVENT_READ` event gets fired.
 
 Back to [Table of Contents](0.table-of-contents.md)
