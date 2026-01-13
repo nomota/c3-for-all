@@ -118,9 +118,9 @@ Socket sock;
 
 void? sock.set_keepalive(bool value);
 void? sock.set_option(KEEPALIVE, value);
-void? sock.set_reuseaddr(bool value)
+void? sock.set_reuseaddr(bool value);
 void? sock.set_option(REUSEADDR, value);
-void? sock_non_blocking();
+void? sock.set_non_blocking();
 
 /*.
 on POSIX systems
