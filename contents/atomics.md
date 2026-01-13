@@ -363,7 +363,7 @@ By using RELAXED atomics + Fences, we get:
 Summary Checklist for Atomics in C3
 
 * Simple Counters: Use `atomic::fetch_add()` with default ordering.
-* Flags/Booleans: Use `@atomic_store()` / `@atomic_load()``.
+* Flags/Booleans: Use `@atomic_store()` / `@atomic_load()`.
 * Complex Data (Stacks/Queues): Use `mem::compare_exchange()`.
 * Bulk Data Transfer: Use RELAXED atomics + `thread::fence()`.
 
