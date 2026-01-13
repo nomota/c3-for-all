@@ -159,7 +159,7 @@ fn void main() {
 Implementing a Lock-Free Stack (often called a Treiber Stack) is a classic way to see the power of the atomic `mem::compare_exchange()` operation.
 In a lock-free stack, we don't use a Mutex to lock the whole structure. Instead, we use a loop to "try" to update the head of the stack. If another thread beats us to it, we simply try again.
 
-##### How it Works: The CAS Logic
+##### How it Works: The CAS(Compare&Swap) Logic
 
 The "magic" happens with atomic `mem::compare_exchange()`. This operation checks: "Is the current head still what I thought it was a millisecond ago? If yes, swap it with my new node. If no, someone else changed it, so fail and let me try again."
 
