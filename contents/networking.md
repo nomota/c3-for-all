@@ -1,6 +1,6 @@
 # Networking
 
-C3 networking provides TCP, UDP, Socket, URL, and inetaddr. All are in `std::net` moduke.
+C3 networking provides TCP, UDP, Socket, URL, and inetaddr. All are in `std::net` module.
 
 ### InetAddress
 
@@ -90,14 +90,13 @@ TcpSocket? sock = tcp::connect_async(String host, uint port, SocketOption... opt
 TcpSocket? sock = tcp::connect_to(AddrInfo* ai, SocketOption... options);
 
 TcpServerSocket? server_sock = tcp::listen(String host, uint port, uint backlog, SocketOption... options, IpProtocol ip_protocol = UNSPECIFIED);
+TcpServerSocket? server_sock = tcp::listen_to(AddrInfo* ai, uint backlog, SocketOption... options);
 
-// after creating server socket, call following option
+// after creating server socket, call following option to reuse address
 void server_sock.set_reuseaddr(true);
 
 TcpSocket? sock = tcp::accept(TcpServerSocket* server_sock);
-TcpServerSocket? sock = tcp::listen_to(AddrInfo* ai, uint backlog, SocketOption... options);
 
-// after 
 
 UdpSocket? sock = udp::connect(String host, uint port, SocketOption... options, IpProtocol ip_protocol = UNSPECIFIED);
 UdpSocket? sock = udp::connect_to(AddrInfo* ai, SocketOption... options)
