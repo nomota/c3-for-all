@@ -110,7 +110,6 @@ counter.data = 0;
 // Define an atomic pointer
 Atomic{void*} shared_ptr;
 shared_ptr.data = null;
-}
 ```
 
 Atomic Operations: C3 provides a set of standard functions to interact with these variables safely.
