@@ -53,7 +53,7 @@ struct Atomic
 Atomic{Type} atm;
 
 Type val = atm.load(AtomicOrdering ordering = SEQ_CONSISTENT);
-void atm.store{Type value, AtomicOrdering ordering = SEQ_CONSISTENT);
+void atm.store(Type value, AtomicOrdering ordering = SEQ_CONSISTENT);
 Type old = atm.add(Type value, AtomicOrdering ordering = SEQ_CONSISTENT);
 Type old = atm.sub(Type value, AtomicOrdering ordering = SEQ_CONSISTENT);
 Type old = atm.mul(Type value, AtomicOrdering ordering = SEQ_CONSISTENT);
