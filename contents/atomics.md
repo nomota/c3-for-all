@@ -37,7 +37,7 @@ enum AtomicOrdering : int
 
 old_val = @atomic_load(#x, AtomicOrdering $ordering = SEQ_CONSISTENT, $volatile = false);
 void @atomic_store(#x, value, AtomicOrdering $ordering = SEQ_CONSISTENT, $volatile = false);
-old_val = mem::compare_exchange(ptr, compare, value, AtomicOrdering $success = SEQ_CONSISTENT, AtomicOrdering $failure = SEQ_CONSISTENT, bool $volatile = true, bool $weak = false, usz $alignment = 0);
+old_val = mem::compare_exchange(ptr, old_val, new_value, AtomicOrdering $success = SEQ_CONSISTENT, AtomicOrdering $failure = SEQ_CONSISTENT, bool $volatile = true, bool $weak = false, usz $alignment = 0);
 ```
 
 Typed atomic oprration set is defined in `std::atomic::types{Type}`.
@@ -92,7 +92,7 @@ old = atomic::fetch_max(ptr, y, AtomicOrdering $ordering = SEQ_CONSISTENT, bool 
 old = atomic::fetch_min(ptr, y, AtomicOrdering $ordering = SEQ_CONSISTENT, bool $volatile = false, usz $alignment = 0);
 ```
 
-Another important concept related to atomics is `fence()` that acts like a guard.
+Another important concept related to atomics is `thread::fence()` that acts like a guard.
 
 ```c3
 import std::thread;
@@ -191,7 +191,7 @@ fn void push(AtomicStack* stack, int val) {
 
         // 3. Try to swap the head. 
         // If stack.head is still old_head, set stack.head to new_node.
-        if (mem::compare_exchange(&stack.head, &old_head, new_node)) {
+        if (mem::compare_exchange(&stack.head, old_head, new_node)) {
             break; // Success!
         }
         // If it failed, 
@@ -208,7 +208,7 @@ fn bool pop(AtomicStack* stack, int* out_val) {
         Node* next_node = old_head.next;
 
         // Try to move the head to the next node
-        if (mem::compare_exchange(&stack.1 head, &old_head, next_node)) {
+        if (mem::compare_exchange(&stack.1 head, old_head, next_node)) {
             *out_val = old_head.value;
             // In a real app, you'd handle memory reclamation (like an RCU or hazard pointers)
             free(old_head); 
@@ -227,7 +227,7 @@ fn bool pop(AtomicStack* stack, int* out_val) {
 
 In concurrent programming, an atomic fence (also known as a memory barrier) is a synchronization primitive that does not involve a specific variable. Instead, it enforces an ordering constraint on the memory operations performed by the CPU and the compiler.
 
-While atomic variables (like `atomic.add()`) protect a specific piece of data, a fence protects the "visibility" of all memory operations around it.
+While atomic variables (like `atomic_var.add()`) protect a specific piece of data, a fence protects the "visibility" of all memory operations around it.
 
 1. Why use a Fence?
 
@@ -397,9 +397,9 @@ Because C3 allows for manual memory layout, we can create a struct that fits int
 ```C3
 
 // A tagged pointer combines the node address with a generation counter
-struct TaggedPointer {
-    Node* ptr;
-    uint tag;
+struct TaggedPointer { // 128bit
+    Node* ptr; // 64bit
+    ulong tag; // 64bit
 }
 
 struct AtomicStack {
@@ -419,9 +419,9 @@ fn void push(AtomicStack* stack, int val) {
         new_head.ptr = new_node;
         new_head.tag = old_head.tag + 1; // Increment the version
 
-        // This CAS will now fail if another thread changed the stack,
+        // This compare&swap will now fail if another thread changed the stack,
         // even if the head pointer address is the same as before.
-        if (mem::compare_exchange(&(uint128)stack.head, &(uint128)old_head, (uint128)new_head)) {
+        if (mem::compare_exchange(&(uint128)stack.head, (uint128)old_head, (uint128)new_head)) {
             break;
         }
     }
@@ -433,7 +433,7 @@ fn void push(AtomicStack* stack, int val) {
 You might wonder: How can C3 handle a whole struct atomically?
 
 * Alignment: C3 ensures that atomic types are properly aligned in memory. For a TaggedPointer (two 64-bit values), the struct must be 16-byte aligned.
-* Hardware Support: If the CPU supports it, the compiler uses a "double-wide" CAS instruction.
+* Hardware Support: If the CPU supports it, the compiler uses a "double-wide" Compare&Swap instruction.
 * Lock-based Fallback: If the hardware doesn't support an atomic operation for a specific struct size, the C3 runtime may use an internal spinlock (though this is platform-dependent).
 
 Summary Checklist
