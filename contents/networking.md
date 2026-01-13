@@ -103,7 +103,7 @@ UdpSocket? sock = udp::connect_to(AddrInfo* ai, SocketOption... options)
 UdpSocket? sock = udp::connect_async(String host, uint port, SocketOption... options, IpProtocol ip_protocol = UNSPECIFIED);
 UdpSocket? sock = udp::connect_async_to(AddrInfo* ai, SocketOption... options)
 
-Socket net::new_socket(fd, AddrInfo* ai);
+Socket sock = net::new_socket(fd, AddrInfo* ai);
 
 // options = REUSEADDR|KEEPALIVE|O_NONEBLOCK
 // ip_protocol = IPPROTO_IP
