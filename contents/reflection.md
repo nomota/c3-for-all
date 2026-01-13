@@ -101,10 +101,11 @@ struct Foo
 
 struct Bar
 {
-    inline Foo f;
+    inline Foo f; // inlining, embedding Foo type within Bar, inheritance! Bar can access Foo's members and methods directly.
 }
 
 String x = Bar.parentof.nameof; // "Foo"
+// x.a == x.f.a // allow direct access to parent's member var
 ```
 
 * `<function_type>.returns`: typeid of the return type.
