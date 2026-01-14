@@ -226,6 +226,8 @@ For more information, see also [Atomics](atomics.md)
 
 In C3, a ConditionVariable is a synchronization primitive used to block a thread until a particular condition is met. It is almost always used in conjunction with a Mutex to protect shared data.
 
+See also [Condition Variable](condition-variable.md)
+
 ```c3
 import std::thread;
 
@@ -245,6 +247,8 @@ void? cond.wait_until(Mutex* mutex, Time time);
 * `signal()`: Wakes up at least one thread currently waiting on the condition variable.
 * `broadcast()`: Wakes up all threads currently waiting.
 * `wait_timeout() / wait_until()`: Prevents indefinite blocking by providing a time limit.
+
+See also [Condition Variable](condition-variable.md)
 
 ### Channels
 
