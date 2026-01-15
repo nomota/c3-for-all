@@ -196,5 +196,90 @@ String s = tzdt.format(allocx, DateTimeFormat dt_format);
 String s = dt.format(allocx, DateTimeFormat dt_format);
 ```
 
+### LibC Time
+
+In addition to the high-level `std::time` modules, C3 allows direct access to the underlying C standard library functions via import libc. This is particularly useful for low-level systems programming or when interfacing with legacy C codebases.
+
+```c3
+import libc;
+
+CInt ts = libc::timespec_get(TimeSpec* ts, CInt base);
+CInt t = libc::nanosleep(TimeSpec* req, TimeSpec* remaining);
+ZString zs = libc::ctime(Time_t* timer);
+Time_t tm_t = libc::time(Time_t* timer);
+Time_t tm_t = libc::timegm(Tm* timeptr);
+ZString zs = libc::strptime(char* buf, ZString format, Tm* tm);
+usz n = libc::strftime(char* dest, usz maxsize, ZString format, Tm* timeptr);
+Tm* tm = libc::localtime(Time_t* timer);
+Tm* tm = libc::localtime_r(Time_t* timer, Tm* result);
+Tm* tm = libc::gmtime(Time_t* timer);
+Tm* tm = libc::gmtime_r(Time_t* timer, Tm* buf);
+double tm = libc::difftime(Time_t time1, Time_t time2);
+ZString zs = libc::asctime(Tm* timeptr);
+ZString zs = asctime_r(Tm* timeptr, char* buf);
+```
+
+Low-Level Structures
+
+When working with `libc`, you shift from C3's DateTime objects to C's traditional time structures:
+* `Time_t`: Usually a 64-bit integer representing seconds since the epoch.
+* `TimeSpec`: A struct containing `tv_sec` and `tv_nsec` for nanosecond precision.
+* `Tm`: The C "broken-down time" struct (fields like `tm_year, tm_mon, tm_mday`, etc.). Note that in C, `tm_year` is years since 1900 and `tm_mon` is 0-indexed (0-11).
+
+Core `libc` Categories
+
+High Precision & Sleeping
+
+* `timespec_get()`: Used to get the current time with nanosecond resolution. The base parameter is typically TIME_UTC.
+* `nanosleep()`: Suspends the execution of the calling thread. If interrupted by a signal, it returns -1 and puts the remaining time into the second parameter.
+
+Conversions (The "Time Chain")
+
+The libc module facilitates the classic C conversion flow:
+| Function | Input | Output | Description |
+|---|---|---|---|
+| `localtime()` | `Time_t` | `Tm*`` | Converts epoch to local time (static buffer). |
+| `gmtime_r()` | `Time_t` | `Tm*`` | Thread-safe conversion to UTC (user-provided buffer). |
+| `timegm()` | `Tm*` | `Time_t` | The inverse: converts UTC Tm back to an epoch integer. |
+
+String Parsing and Formatting
+
+* `strftime()`: The standard way to create highly customized date strings using format specifiers (e.g., %Y-%m-%d %H:%M:%S).
+* `strptime()`: Parses a string into a `Tm` struct based on a format string.
+* `ctime()` / `asctime()`: Legacy functions that return a fixed-format string (e.g., "Www Mmm dd hh:mm:ss yyyy"). Note: These are generally avoided in modern code in favor of `strftime()`.
+
+Safe vs. Unsafe (The _r Suffix)
+
+In your snippet, you see both `localtime()` and `localtime_r()``. This is a critical distinction in C3/C:
+* `localtime()`: Returns a pointer to a static internal buffer. Calling it again from any thread will overwrite the previous result.
+* `localtime_r()`: Reentrant version. You provide the memory (`Tm* result`), making it thread-safe.
+
+Arithmetic
+
+While C3's `std::time` uses operator overloading, `libc` uses:
+ 
+* `difftime()`: Returns the difference in seconds as a double (time1 - time2).
+
+Example: Using `libc` for a High-Res Sleep
+
+```C3
+import libc;
+
+fn void high_res_wait() {
+    libc::TimeSpec req;
+    req.tv_sec = 0;
+    req.tv_nsec = 500_000_000; // 500ms
+    
+    libc::nanosleep(&req, null);
+}
+
+// Time Formatting
+char[128] buf;
+Tm tm;
+usz n = libc::strftime(buf.ptr, buf.len, "%Y%m%d%H%M%S", localtime_r(libc::time( ull), &tm));
+String output = buf[0..n-1];
+```
+
+
 Back to [Table of Contents](0.table-of-contents.md)
 
