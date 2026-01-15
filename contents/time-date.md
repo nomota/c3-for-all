@@ -11,26 +11,7 @@ import std::time;
 
 typedef Time = long;
 typedef Duration = long;
-typedef Clock = ulong;
 typedef NanoDuration (Printable) = long;
-
-struct DateTime {
-    int usec;
-    char sec;
-    char min;
-    char hour;
-    char day;
-    Month month;
-    Weekday weekday;
-    int year;
-    ushort year_day;
-    Time time;
-}
-
-struct TzDateTime {
-    inline DateTime date_time;
-    int gmt_offset;
-}
 
 Time t = time::now();
 
@@ -78,6 +59,8 @@ In C3, the `Clock` type is distinct from the wall-clock `Time` type because it i
 ```c3
 import std::time::clock;
 
+typedef Clock = ulong;
+
 Clock c = clock::now();
 NanoDuration nd = c.mark();
 Clock c = c.add_nano_duration(NanoDuration nano) @operator_s(+);
@@ -102,6 +85,25 @@ DateTime vs. TzDateTime
 
 ```c3
 import std::time::datetime;
+
+
+struct DateTime {
+    int usec;
+    char sec;
+    char min;
+    char hour;
+    char day;
+    Month month;
+    Weekday weekday;
+    int year;
+    ushort year_day;
+    Time time;
+}
+
+struct TzDateTime {
+    inline DateTime date_time;
+    int gmt_offset;
+}
 
 DateTime dt = now();
 DateTime dt = datetime::from_date(int year, Month month = JANUARY, int day = 1, int hour = 0, int min = 0, int sec = 0, int us = 0);
