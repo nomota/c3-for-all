@@ -238,8 +238,8 @@ Conversions (The "Time Chain")
 The libc module facilitates the classic C conversion flow:
 | Function | Input | Output | Description |
 |---|---|---|---|
-| `localtime()` | `Time_t` | `Tm*`` | Converts epoch to local time (static buffer). |
-| `gmtime_r()` | `Time_t` | `Tm*`` | Thread-safe conversion to UTC (user-provided buffer). |
+| `localtime()` | `Time_t` | `Tm*` | Converts epoch to local time (static buffer). |
+| `gmtime_r()` | `Time_t` | `Tm*` | Thread-safe conversion to UTC (user-provided buffer). |
 | `timegm()` | `Tm*` | `Time_t` | The inverse: converts UTC Tm back to an epoch integer. |
 
 String Parsing and Formatting
@@ -250,7 +250,7 @@ String Parsing and Formatting
 
 Safe vs. Unsafe (The _r Suffix)
 
-In your snippet, you see both `localtime()` and `localtime_r()``. This is a critical distinction in C3/C:
+In your snippet, you see both `localtime()` and `localtime_r()`. This is a critical distinction in C3/C:
 * `localtime()`: Returns a pointer to a static internal buffer. Calling it again from any thread will overwrite the previous result.
 * `localtime_r()`: Reentrant version. You provide the memory (`Tm* result`), making it thread-safe.
 
@@ -274,9 +274,10 @@ fn void high_res_wait() {
 }
 
 // Time Formatting
-char[128] buf;
+char[64] buf;
+Time_t t = libc::time(null);
 Tm tm;
-usz n = libc::strftime(buf.ptr, buf.len, "%Y%m%d%H%M%S", localtime_r(libc::time( ull), &tm));
+usz n = libc::strftime(buf.ptr, buf.len, "%Y%m%d%H%M%S", libc::localtime_r(&t, &tm));
 String output = buf[0..n-1];
 ```
 
