@@ -1,6 +1,6 @@
 # Time and Date
 
-In C3, time is generally handled as a 64-bit integer. The Duration type represents a span of time, while Time represents a specific point in time (Unix epoch)
+In C3, time is generally handled as a 64-bit integer. The `Duration` type represents a span of time, while `Time` represents a specific point in time (Unix epoch)
 
 * `Time` A point in time (usually nanoseconds since 1970).
 * `Duration`: A length of time.
@@ -98,7 +98,7 @@ DateTime vs. TzDateTime
 * The primary difference between these two structures is how they handle geographic offsets:
 * `DateTime`: Represents a "naive" date and time. It doesn't inherently know its relationship to UTC/GMT unless you treat it as such by convention.
 * `TzDateTime`: An augmented version of DateTime that includes a `gmt_offset` (in seconds). This is essential for local time calculations and global synchronization.
-± `gmt_offset` range: -12*3600 ~ +14*3600
+* `gmt_offset` range: `-12*3600` ~ `+14*3600`, -12 hour to +14 hour
 
 ```c3
 import std::time::datetime;
