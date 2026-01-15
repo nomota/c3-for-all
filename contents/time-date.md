@@ -86,7 +86,6 @@ DateTime vs. TzDateTime
 ```c3
 import std::time::datetime;
 
-
 struct DateTime {
     int usec;
     char sec;
@@ -105,7 +104,7 @@ struct TzDateTime {
     int gmt_offset;
 }
 
-DateTime dt = now();
+DateTime dt = datetime::now();
 DateTime dt = datetime::from_date(int year, Month month = JANUARY, int day = 1, int hour = 0, int min = 0, int sec = 0, int us = 0);
 TzDateTime tzdt = datetime::from_date_tz(int year, Month month = JANUARY, int day = 1, int hour = 0, int min = 0, int sec = 0, int us = 0, int gmt_offset = 0);
 TzDateTime tzdt = dt.to_local();
