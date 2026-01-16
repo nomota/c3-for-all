@@ -341,8 +341,8 @@ fn void test_print() => @pool() // frees temporary memories
 {
     Char16 c16 = @char16("Å")[0]!!; // 2byte European accented char
     Char32 c32 = @char32("🔥")[0]!!; // 4 byte emoji char
-    Char16[] c16s = tu8to16("😀♡한漢Ê🇰🇷");
-    Char32[] c32s = tu8to32("𝄞ÆØ«»☆★");
+    Char16[] c16s = @char16("😀♡한漢Ê🇰🇷");
+    Char32[] c32s = @char32("𝄞ÆØ«»☆★");
 
     io::printfn("%c", c16); // Prints Å
     io::printfn("%c", c32); // prints 🔥
