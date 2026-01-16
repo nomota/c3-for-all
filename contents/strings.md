@@ -260,7 +260,7 @@ Char32? c32 = str_iter.get();
 ```c3
 import std::collections; // for List{Char32}
 
-fn Char32 c8to32(String rune_char)
+fn Char32 c8to32(String rune_char) // equivalent compile time macro @char32()
 {
     return rune_char.to_temp_utf32()[0]!!; // panic on error
 }
@@ -280,12 +280,12 @@ fn void test_iterator() => @pool() // release temporary memory
     }
 
     assert(rune_chars.len() == n);
-    assert(rune_chars[0] == c8to32("A")); // 1 byte, ASCII alphabet
-    assert(rune_chars[1] == c8to32("한")); // 3 bytes, Korean alphabet
+    assert(rune_chars[0] == @char32("A")); // 1 byte, ASCII alphabet
+    assert(rune_chars[1] == @char32("한")); // 3 bytes, Korean alphabet
     assert(rune_chars[2] == u8to32("漢")); // 3 bytes, Chinese ideogram
-    assert(rune_chars[3] == c8to32("♡")); // 3 bytes, special icon char
-    assert(rune_chars[4] == c8to32("Å")); // 2 bytes, European accented char
-    assert(rune_chars[5] == c8to32("😂")); // 4 bytes, Emoticon
+    assert(rune_chars[3] == @char32("♡")); // 3 bytes, special icon char
+    assert(rune_chars[4] == @char32("Å")); // 2 bytes, European accented char
+    assert(rune_chars[5] == @char32("😂")); // 4 bytes, Emoticon
 }
 ```
 
@@ -317,7 +317,7 @@ Note that C3's `String` is encoded in UTF-8, and most of current terminals assum
 ```c3
 import std::io;
 
-fn String tu32to8(Char32[] c32s)
+fn String tu32to8(Char32[] c32s) 
 {
     return string::from_utf32(tmem, c32s)!!; // panic on error
 }
@@ -327,20 +327,20 @@ fn String tu16to8(Char16[] c16s)
     return string::from_utf16(tmem, c16s)!!; // panic on error
 }
 
-fn Char16[] tu8to16(String u8)
+fn Char16[] tu8to16(String u8) // equivalent compile macro @char16()
 {
     return u8.to_temp_utf16()!!; // panic on error
 }
 
-fn Char32[] tu8to32(String u8)
+fn Char32[] tu8to32(String u8) // equivalent compile time macro @char32()
 {
     return u8.to_temp_utf32()!!; // panic on error
 }
 
 fn void test_print() => @pool() // frees temporary memories
 {
-    Char16 c16 = tu8to16("Å")[0]!!; // 2byte European accented char
-    Char32 c32 = tu8to32("🔥")[0]!!; // 4 byte emoji char
+    Char16 c16 = @char16("Å")[0]!!; // 2byte European accented char
+    Char32 c32 = @char32("🔥")[0]!!; // 4 byte emoji char
     Char16[] c16s = tu8to16("😀♡한漢Ê🇰🇷");
     Char32[] c32s = tu8to32("𝄞ÆØ«»☆★");
 
@@ -397,7 +397,7 @@ fn usz? Char32[].to_format(&self, Formatter* f) @dynamic
 
 fn void test_format() => @pool()
 {
-    Char32[] c32 = tu8to32("♡한글♡");
+    Char32[] c32 = @char32("♡한글♡"); // compile time macro
     io::printfn("%s", c32); // prints <<♡한글♡>> via Char32[].to_format()
 }
 ```
@@ -495,6 +495,47 @@ fn void test_dstr()
     dstr.free();
 }
 ```
+
+
+### Libc String
+
+C standard library functions to C3. 
+
+```c3
+import libc;
+
+ZString zs = libc::strcat(ZString dest, ZString src); // dest+src
+char* p = libc::strchr(char* str, CInt c);
+CInt cmp = libc::strcmp(ZString str1, ZString str2);
+CInt cmp = libc::strcoll(ZString str1, ZString str2); // Locale sensitive compare
+usz idx = libc::strcspn(ZString str1, ZString str2); // string complement span, How many characters do I have to skip before I hit one of these 'forbidden' characters?
+ZString s = libc::strcpy(ZString dst, ZString src);
+ZString s = libc::strdup(ZString s);
+usz n = libc::strlen(ZString str);
+ZString zs = libc::strncat(char* dest, char* src, usz n);
+CInt cmp = libc::strncmp(char* str1, char* str2, usz n);
+char* s = libc::strncpy(char* dst, char* src, usz n);
+CULong ul = libc::stroul(char* str, char** endptr, int base); // str to ulong
+char* p = libc::strpbrk(ZString str1, ZString str2); // a string-searching function that is very closely related to strcspn(), but with one major difference: it returns a pointer to the character found, rather than its index.
+usz idx = lib::strspn(ZString str1, ZString str2); // counts how many characters at the very beginning of a string belong to a specific set of allowed characters
+char* p = libc::strrchr(ZString str, CInt c); // str reverse chr
+char* p = libc::strstr(ZString haystack, ZString needle);
+double d = libc::strtod(char* str, char** endptr); // str to double
+float f = libc::strtof(char* str, char** endptr); // str to float
+ZString p = libc::strtok(ZString str, ZString delim); // str tokenizer
+CLong l = libc::strtol(char* str, char** endptr, CInt base); // str to long
+CULong ul = libc::strtoul(char* str, char** endptr, CInt base); // str to ulong
+usz n = libc::strxfrm(char* dest, ZString src, usz n); // transforms a string into a new format, using locale rules
+double d = libc::atof(char* str); // ascii to float
+int n = libc::atoi(char* str); // ascii to int
+CLongLong ll = libc::atoll(char* str); // ascii to longlong
+CInt n = libc::sscanf(char* buffer, ZString format, ...);
+```
+
+Key Clarifications
+
+* `strtok()` Warning: In your snippet, `libc::strtok()` returns a ZString. Remember that strtok is stateful and destructive (it modifies the original string by inserting \0). In C3, if you are working with slices or safe strings, you might prefer a native iterator, but for libc compatibility, this is correct.
+* `strtod()` / `strtol()`: These are much safer than `atoi()` or `atof()` because the `endptr` allows you to check if the entire string was consumed or if it failed halfway through (e.g., parsing "123abc").
 
 #### Compile time macros
 
