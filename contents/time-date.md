@@ -197,12 +197,12 @@ String s = tzdt.format(allocx, DateTimeFormat dt_format);
 String s = dt.format(allocx, DateTimeFormat dt_format);
 ```
 
-### LibC Time
+### Libc Time
 
-In addition to the high-level `std::time` modules, C3 allows direct access to the underlying C standard library functions via `import std::libc`. This is particularly useful for low-level systems programming or when interfacing with legacy C codebases.
+In addition to the high-level `std::time` modules, C3 allows direct access to the underlying C standard library functions via `import libc`. This is particularly useful for low-level systems programming or when interfacing with legacy C codebases.
 
 ```c3
-import std::libc;
+import libc;
 
 CInt ts = libc::timespec_get(TimeSpec* ts, CInt base);
 CInt t = libc::nanosleep(TimeSpec* req, TimeSpec* remaining);
@@ -222,7 +222,7 @@ ZString zs = asctime_r(Tm* timeptr, char* buf);
 
 Low-Level Structures
 
-When working with `std::libc`, you shift from C3's DateTime objects to C's traditional time structures:
+When working with `libc`, you shift from C3's DateTime objects to C's traditional time structures:
 * `Time_t`: Usually a 64-bit integer representing seconds since the epoch.
 * `TimeSpec`: A struct containing `tv_sec` and `tv_nsec` for nanosecond precision.
 * `Tm`: The C "broken-down time" struct (fields like `tm_year, tm_mon, tm_mday`, etc.). Note that in C, `tm_year` is years since 1900 and `tm_mon` is 0-indexed (0-11).
@@ -236,7 +236,7 @@ High Precision & Sleeping
 
 Conversions (The "Time Chain")
 
-The `std::libc` module facilitates the classic C conversion flow:
+The `libc` module facilitates the classic C conversion flow:
 | Function | Input | Output | Description |
 |---|---|---|---|
 | `localtime()` | `Time_t` | `Tm*` | Converts epoch to local time (static buffer). |
@@ -257,14 +257,14 @@ In your snippet, you see both `localtime()` and `localtime_r()`. This is a criti
 
 Arithmetic
 
-While C3's `std::time` uses operator overloading, `std::libc` uses:
+While C3's `std::time` uses operator overloading, `libc` uses:
  
 * `difftime()`: Returns the difference in seconds as a double (time1 - time2).
 
-Example: Using `std::libc` for a High-Res Sleep
+Example: Using `libc` for a High-Res Sleep
 
 ```C3
-import std::libc;
+import libc;
 
 fn void high_res_wait() {
     libc::TimeSpec req;
