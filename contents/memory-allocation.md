@@ -670,6 +670,37 @@ void? allocator::free_try(allocx,void *ptr);
 
 The `_try()` macros are indeed not that useful when using `mem`, but they might be useful if you're using another allocator, like the standard Arena allocator which will return a fault (OOM) when it has no memory left in its arena.
 
+##₩ Libc memory allocation
+
+C3 `libc` interface for low-level memory operations. While string functions look for the null terminator (`\0`), these memory functions are "byte-oriented" and require an explicit size (`usz n` or `count`).
+
+```C3
+import libc;
+
+void* p = libc::calloc(usz count, usz size);
+void* p = libc::free(void*);
+void* p = libc::malloc(usz size);
+void* p = libc::memchr(void* str, CInt c, usz n);
+CInt cmp = libc::memcmp(void* buf1, void* buf2, usz count);
+void* p = libc::memcpy(void* dest, void* src, usz n);
+void* p = libc::memmove(void* dest, void* src, usz n);
+void* p = libc::memset(void* dest, CInt value, usz n);
+void* p = libc::realloc(void* ptr, usz size);
+```
+
+Crucial Distinctions
+
+* `memcpy()` vs. `memmove()`
+  * This is the most frequent source of memory corruption in C-like languages.
+  * `libc::memcpy()`: Fast, but assumes the source and destination buffers do not overlap. If they do, the behavior is undefined (often resulting in corrupted data).
+  * `libc::memmove()`: Safe. It handles overlapping regions (e.g., shifting a string's contents two bytes to the right within the same buffer) by copying to a temporary location first if necessary.
+* `malloc()` vs. `calloc()`
+  * `libc::malloc()`: Allocates raw memory. The contents are garbage (whatever was left behind by the previous owner).
+  * `libc::calloc()`: Allocates memory and clears it to zero. It also takes two arguments (count and size) to help prevent integer overflow errors during the calculation.
+* The "Find" and "Fill" Logic:
+  * `memchr()`: Useful for finding a byte in a buffer of a known size (unlike `strchr()`, it won't stop at a null byte).
+  * `memset()`: Often used for zeroing out a struct or an array: `libc::memset(&my_struct, 0, sizeof(my_struct)`).
+
 
 ### Which allocator to use
 
