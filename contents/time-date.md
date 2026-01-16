@@ -25,15 +25,15 @@ Time t = t.sub_duration(Duration duration) @operator(-);
 
 int cmp = t.compare_to(Time other);
 double d = t.to_seconds();
-Duration d = t.diff_us(Time other) @operator(-);
+Duration d = t.diff_us(Time other) @operator(-); // microsec 10-6
 double d = t.diff_sec(Time other);
 double d = t.diff_min(Time other);
 double d = t.diff_hour(Time other);
 double d = t.diff_days(Time other);
 double d = t.diff_weeks(Time other);
 
-Duration d = time::us(long l); // nano sec
-Duration d = time::ms(long l); // mili sec
+Duration d = time::us(long l); // micro sec 10-6
+Duration d = time::ms(long l); // mili sec 10-3
 Duration d = time::sec(long l);
 Duration d = time::min(long l);
 Duration d = time::hour(long l);
@@ -116,8 +116,8 @@ bool b = tzdt.eq(TzDateTime other) @operator(==);
 void dt.set_date(int year, Month month = JANUARY, int day = 1, int hour = 0, int min = 0, int sec = 0, int us = 0);
 void dt.set_time(Time time);
 
-DateTime dt = dt.add_us(Duration d) @operator_s(+); // nano sec
-DateTime dt.sub_us(Duration d) @operator(-); // nano sec
+DateTime dt = dt.add_us(Duration d) @operator_s(+); // micro sec 10-6
+DateTime dt.sub_us(Duration d) @operator(-); // micro sec 10-6
 DateTime dt = dt.add_seconds(int seconds);
 DateTime dt = dt.add_minutes(int minutes);
 DateTime dt = dt.add_hours(int hours);
@@ -125,8 +125,8 @@ DateTime dt = dt.add_days(int days);
 DateTime dt = dt.add_weeks(int weeks);
 DateTime dt = dt.add_years(int years);
 DateTime dt = dt.add_months(int months);
-TzDateTime tzdt = tzdt.add_us(Duration d) @operator_s(+); // nano sec
-TzDateTime tzdt = tzdt.sub_us(Duration d) @operator(-); // nano sec
+TzDateTime tzdt = tzdt.add_us(Duration d) @operator_s(+); // micro sec
+TzDateTime tzdt = tzdt.sub_us(Duration d) @operator(-); // micro sec
 TzDateTime tzdt = tzdt.add_seconds(int seconds);
 TzDateTime tzdt = tzdt.add_minutes(int minutes);
 TzDateTime tzdt = tzdt.add_hours(int hours);
