@@ -504,6 +504,8 @@ C standard library functions to C3.
 ```c3
 import libc;
 
+CInt n = libc::snprintf(char* buffer, usz size, ZString format, ...);
+CInt n = libc::sprintf(char* buffer, ZString format, ...);
 ZString zs = libc::strcat(ZString dest, ZString src); // dest+src
 char* p = libc::strchr(char* str, CInt c);
 CInt cmp = libc::strcmp(ZString str1, ZString str2);
