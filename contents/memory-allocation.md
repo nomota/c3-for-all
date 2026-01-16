@@ -678,7 +678,7 @@ C3 `libc` interface for low-level memory operations. While string functions look
 import libc;
 
 void* p = libc::calloc(usz count, usz size);
-void* p = libc::free(void*);
+void libc::free(void*);
 void* p = libc::malloc(usz size);
 void* p = libc::memchr(void* str, CInt c, usz n);
 CInt cmp = libc::memcmp(void* buf1, void* buf2, usz count);
