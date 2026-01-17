@@ -72,7 +72,7 @@ You noticed several @ tags in the code; these are Attributes that tell the compi
 `std::io::path` module provides a comprehensive suite for filesystem manipulation and path string parsing. It handles everything from basic metadata checks to complex directory traversal.
 * One of the key strengths of this module is how it differentiates between heap-allocated paths (requiring an allocator) and temporary paths (prefixed with t, like `to_tpath()` or `tappend()`).
 
-```
+```c3
 import std::io::path;
 
 Path? p = path::new(allocx, String path, PathEnv path_env = DEFAULT_ENV);
