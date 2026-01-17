@@ -192,7 +192,7 @@ HashMap* map = hashmap.init_from_map(allocx, HashMap* other_map);
 HashMap* map = hashmap.tinit_from_map(HashMap* other_map);
 ```
 
-```
+```c3
 bool b = hashmap.is_empty();
 usz n = hashmap.len();
 Value*? val = hashmap.get_ref(Key key);
