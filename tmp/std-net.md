@@ -16,7 +16,7 @@ I was translating my network code and found C3's current `std::net` has followin
 
 4. Added required structs for these functions, in std/net/os/common.c3
 
-5. Mergerd ws2def.c3 to wsa.c3. Move it from std/os/win32 to std/net/win32. Rename module from std::io::win32 to std::net::win32.
+5. Merged ws2def.c3 to wsa.c3. Move it from std/os/win32 to std/net/win32. Rename module from std::io::win32 to std::net::win32.
 
 6. Correct Socket.close(). Current close() calls int_fd.close() which is meaningless. => corrected as close(int_fd) style.
 
