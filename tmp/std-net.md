@@ -6,7 +6,7 @@ I was translating my network code and found C3's current `std::net` has followin
 
 2. `std::net` impotrs `libc` and `std::os` due to those tiny pieces. => Remove importing `libc` and `std::os`, from all files in std/net.
 
-3. In `libc.a` a lot of network related functions. Best is to give `extern` bridge for all of them, but... I added following functions.
+3. In `libc.a` a lot of network related functions. Best is to give `extern` bridge for all of them, but... for pactical reason, I just added following functions.
   * getnameinfo(), gethostbyaddr(), gethostbyname()
   * close(), recvfrom(), sendto()
   * inet_ntop(), inet_pton()
@@ -16,7 +16,7 @@ I was translating my network code and found C3's current `std::net` has followin
 
 4. Added required structs for these functions, in std/net/os/common.c3
 
-5.Mergerd ws2def.c3 to wsa.c3. Move it from std/os/win32 to std/net/win32. Rename module from std::io::win32 to std::net::win32.
+5. Mergerd ws2def.c3 to wsa.c3. Move it from std/os/win32 to std/net/win32. Rename module from std::io::win32 to std::net::win32.
 
 6. Correct Socket.close(). Current close() calls int_fd.close() which is meaningless. => corrected as close(int_fd) style.
 
