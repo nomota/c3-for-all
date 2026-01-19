@@ -320,4 +320,42 @@ Why don't I do myself?
 
 I don't have any pc with me. I'm on a Galaxy phone. I have no testing environment.
 
+Q&A:
+
+Q: Why do you try to remove functions from libc?
+
+This is about C3 bridging to C's libc.a
+(extern funcs)
+libc.a has huge number of C functions, (hundresds). I would make a one large library in C3 that has 'extern' mappings to every single functions to them. And I'll call the collection of mappings to be 'libc' module in C3.
+
+But for some reason, original C3 std lib writers decided to divide the mappings into groups.
+
+Some mappings are in C3's 'libc' module, math related mappings are in C3's 'std::math', networking related mappings are in C3's 'std::net', os related mappings are in C3's  'std::os' ... sounds reasonable. So C3's 'std::net' module has not only C3's own function definitions, but also some 'extern' mappings to network related C functions in libc.a.
+
+But the problem is which function mapping goes to which module.
+
+Some network related function mappings are in 'std::net', others are in 'libc' module, and a few others are in 'std::os', and most of the net-related functions have no mappings at all.
+
+So I try to collect all net-related functions to 'std::net'. And add some more mappings to it, which are required for me but not yet mapped to C3.
+
+Q: close is not only for net.
+
+close is used for files and sockets and for others.
+
+So I think it's better to have close not only in 'libc' module, but also duplicated in  'std::net' so that 'std::net' module itself to be complete and make less cross referencing accross modules. Duplication, but it's just extern mapping at all. In this case, the close() in 'std::net'  deals with only socket handles.
+
+Q: This has grown organically. That's why it's inconsistent.
+
+
+I saw and felt the difficulties that the first writers had to confront with. 
+
+It's better to sort out things from time to time. Best time is when necessity arises.
+
+I just needed 'recvfrom(), sendto()'. I walked around to find best place to put them, and found some troubles.
+
+This patch seems touching many existing files, so it could be error prone.
+
+But in reality, it's only about net-related things, that are not used anywhere else. So it woudn't hurt the whole project.
+
+I had'nt yet applied and compile. I think some typecasting might needed to pass the compiler. It will work fine, once it passes the compiler.
  
