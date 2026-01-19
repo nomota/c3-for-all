@@ -338,11 +338,11 @@ Some network related function mappings are in 'std::net', others are in 'libc' m
 
 So I try to collect all net-related functions to 'std::net'. And add some more mappings to it, which are required for me but not yet mapped to C3.
 
-Q: close is not only for net.
+Q: close() is not only for net.
 
-close is used for files and sockets and for others.
+close() is used for files and sockets and for others.
 
-So I think it's better to have close not only in 'libc' module, but also duplicated in  'std::net' so that 'std::net' module itself to be complete and make less cross referencing accross modules. Duplication, but it's just extern mapping at all. In this case, the close() in 'std::net'  deals with only socket handles.
+So I think it's better to have close() not only in 'libc' module, but also duplicated in 'std::net' so that 'std::net' module itself to be complete and make less cross referencing accross modules. Duplication, but it's just extern mapping at all. In this case, the close() in 'std::net'  deals with only socket handles.
 
 Q: This has grown organically. That's why it's inconsistent.
 
@@ -351,7 +351,7 @@ I saw and felt the difficulties that the first writers had to confront with.
 
 It's better to sort out things from time to time. Best time is when necessity arises.
 
-I just needed 'recvfrom(), sendto()'. I walked around to find best place to put them, and found some troubles.
+I just needed 'recvfrom(), sendto()'. I walked around to look for the best place to put them, and it turned out to have some troubles.
 
 This patch seems touching many existing files, so it could be error prone.
 
