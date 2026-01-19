@@ -55,8 +55,6 @@ extern fn CInt shutdown(Win32_SOCKET s, CInt how);
 
 // * std/os/linux/linux.c3
 // (remove these)
-// these are not very necessary. 
-// these are not used anywhere in std library, so far.
 // move these to net/io/win32, net/io/posix
 
 import std::net::os; // cyclic reference, remove
