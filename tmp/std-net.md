@@ -359,7 +359,7 @@ But in reality, it's only about net-related things, that are not used anywhere e
 
 I had'nt yet applied and compile. I think some typecasting might needed to pass the compiler. It will work fine, once it passes the compiler.
 
-Q: dirs are like this: std/os/<platform>/<category>.c3 or std/<group>/os/<platform>.c3
+Q: dirs are like this: `std/os/<platform>/<category>.c3` or `std/<group>/os/<platform>.c3`
 
 There are many 'os' dirs and modules. libc/os, std/os, std/net/os which made me a lot of troubles to figure out which is where, especially with existing cyclic cross references.
 
