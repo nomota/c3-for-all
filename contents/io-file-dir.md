@@ -199,6 +199,7 @@ void? file::delete(String filename);
 File f;
 void? f.reopen(String filename, String mode);
 usz? n = f.seek(isz offset, Seek seek_mode = Seek.SET|CURSOR|END) @dynamic;
+void? f.flush();
 ```
 
 Opening and Closing Files
