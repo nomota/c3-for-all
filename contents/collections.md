@@ -348,6 +348,21 @@ fn void main()
 }
 ```
 
+#### Hashing Key
+
+If the `Key` type does not have `key.hash()`, you need to supply a hash function yourself, as follows.
+
+```c3
+import city; // Google's CityHash available at https://github.com/nomota/city.c3l
+
+uint Key.hash(self)
+{
+   
+ulong h1 = city::hash((char*)&self, Key.siseof);
+    return (uint)h1;
+}
+```
+
 ### HashSet{Value}
 
 `HashSet` is a collection of `Value`s and no duplication is allowed.
