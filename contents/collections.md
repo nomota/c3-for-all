@@ -357,7 +357,7 @@ import city; // Google's CityHash available at https://github.com/nomota/city.c3
 
 uint Key.hash(self)
 {
-   ulong h1 = city::hash((char*)&self, Key.siseof);
+    ulong h1 = city::hash64((char*)&self, Key.siseof);
     return (uint)h1;
 }
 ```
