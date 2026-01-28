@@ -52,7 +52,7 @@ So here's my patch instruction.
 1. Remove all `struct Stat` from `std/libc/os/*.c3`
 2. Add these three files to `std/io/os`
   * [stat.def.c3](https://github.com/nomota/ext_libc.c3l/blob/main/src%2Fstat.def.c3)
-  * [stat.posix.c3](https://github.com/nomota/ext_libc.c3l/blob/main/src%2Fstat.posx.c3)
+  * [stat.posix.c3](https://github.com/nomota/ext_libc.c3l/blob/main/src%2Fstat.posix.c3)
   * [stat.win32.c3](https://github.com/nomota/ext_libc.c3l/blob/main/src%2Fstat.win32.c3)
 3. Rename module name as `std::io` in those three files.
 4. That˚s all.
