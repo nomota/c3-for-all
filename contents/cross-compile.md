@@ -1,0 +1,20 @@
+# Cross Compile
+
+C3 is based on LLVM and `c3c` can produce output for these OS'es and CPU's. You can use 'c3c --list-targets' to list all valid targets,
+
+```
+$ c3c --list-targets
+android-aarch64 android-x86_64
+elf-aarch64  elf-riscv32 elf-riscv64 elf-x86  elf-x64 elf-xtensa
+freebsd-x86 freebsd-x64
+ios-aarch64
+linux-aarch64 linux-riscv32 linux-riscv64 linux-x86 linux-x64
+macos-aarch64 macos-x64
+mcu-x86
+mingw-x64
+netbsd-x86 netbsd-x64
+openbsd-x86 openbsd-x64
+wasm32 wasm64
+windows-aarch64 windows-x64
+```
+
