@@ -57,7 +57,7 @@ So here's my patch instruction.
   * [stat.win32.c3](https://github.com/nomota/ext_libc.c3l/blob/main/src%2Fstat.win32.c3)
 4. That˚s all.
 
-Then we can access `io::file_exists()` ... etc.
+Then we can access `io::last_modified()` ... etc.
 
 Anybody do PR this on behalf of me?
 
