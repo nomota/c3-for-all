@@ -7,7 +7,6 @@ clean:
 
 push:
 	@make clean
-	@make pull
 	@git add .
 	@git commit -m "update"
 	@git push origin main
