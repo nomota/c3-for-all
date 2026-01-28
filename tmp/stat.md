@@ -43,7 +43,7 @@ Current `struct Stat` definitions are at these files.
 ./lib/std/libc/os/darwin.c3:struct Stat
 ```
 
-As you can see ArcType was considered only either `X84_64` or not, but in reality `struct Stat` is a lot divergent than that.
+As you can see ArchType was considered only either `X84_64` or not, but in reality `struct Stat` is a lot divergent than that.
 
 Take look at [stat.def.c3](https://github.com/nomota/ext_libc.c3l/blob/main/src%2Fstat.def.c3). Every combination of OS and ArchType differs slightly in some way.
 
@@ -54,7 +54,7 @@ So here's my patch instruction.
   * [stat.def.c3](https://github.com/nomota/ext_libc.c3l/blob/main/src%2Fstat.def.c3)
 3. Add these files to `std/io/os` and change module name as `std::io`
   * [stat.posix.c3](https://github.com/nomota/ext_libc.c3l/blob/main/src%2Fstat.posix.c3)
-  * [stat.win32.c3](https://github.com/nomota/ext_libc.c3l/blob/main/src%2Fstat.win32.c3)
+  * [stat.win32.c3](https://github.com/nomota/ext_libc.c3l/blob/main/src%2Fstat.win32.c3) (This implements all functions Win-natively, without relying on Stat).
 4. That˚s all.
 
 Then we can access `io::last_modified()` ... etc.
