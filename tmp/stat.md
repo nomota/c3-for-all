@@ -2,7 +2,7 @@
 
 I was looking for `long? last_modified(String file)`, and found that it's missing in the standard library. I looked around and found some issues are there with `struct Stat`.
 
-`struct Stat` is used for following functions.
+Functions that uses `struct Stat`, and related functions are as follows.
 
 * `bool file_exists(String file)`
 * `long? file_size(String file)`
