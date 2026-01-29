@@ -61,5 +61,5 @@ Then we can access `io::last_modified()` ... etc.
 
 Anybody do PR this on behalf of me?
 
-Why don't do it myself? I've only a Galaxy phone, no testing environment. 
+Why don't do it myself? I have only a Galaxy phone, no testing environment. 
 
