@@ -58,6 +58,7 @@ So here's my patch instruction.
 4. That˚s all.
 
 Then we can access `io::last_modified()` ... etc.
+(or module name as `std::io::stat` and `stat::last_modified()`)
 
 Anybody do PR this on behalf of me?
 
