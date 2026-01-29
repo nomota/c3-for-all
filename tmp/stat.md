@@ -45,7 +45,7 @@ Current `struct Stat` definitions are at these files.
 
 As you can see ArchType was considered only either `X84_64` or not, but in reality `struct Stat` is a lot divergent than that.
 
-Take look at [stat.def.c3](https://github.com/nomota/ext_libc.c3l/blob/main/src%2Fstat.def.c3). Every combination of OS and ArchType differs slightly in some way.
+Take a look at [stat.def.c3](https://github.com/nomota/ext_libc.c3l/blob/main/src%2Fstat.def.c3). Every combination of OS and ArchType differs slightly in some way.
 
 So here's my patch instruction.
 
