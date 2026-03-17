@@ -143,34 +143,34 @@ fn void test_tokenize()
 There are functions/macros that require additional memory. You need to supply allocator or buffer explicitly.
 
 ```c3
-Allocator allocx;
+// Allocator mem; // implicit default allocator
 String str;
-String s = string::format(allocx, String fmt, args...);
+String s = string::format(mem, String fmt, args...);
 String s = string::bformat(char[] buffer, String fmt, args...);
-String s = string::join(allocx, String[] s, String joiner);
-String s = str.replace(allocx, String needle, String new_str);
-String[] strs = str.split(allocx, String delimiter, usz max = 0, bool skip_empty = false);
+String s = string::join(mem, String[] s, String joiner);
+String s = str.replace(mem, String needle, String new_str);
+String[] strs = str.split(mem, String delimiter, usz max = 0, bool skip_empty = false);
 String[]? strs = str.split_to_buffer(String delimiter, String[] buffer, usz max = 0, bool skip_empty = false);
-String s2 = str.concat(allocx, String s2);
-String s = str.copy(allocx);
-void str.free(allocx);
-String s = str.to_lower_copy(allocx);
-String s = str.to_upper_copy(allocx);
-String s = str.capitalize_copy(allocx);
-String s = str.snake_to_pascal_copy(allocx);
-String s = str.pascal_to_snake_copy(allocx);
-String s = string::from_struct(allocx, struct_x);
-String s = str.escape(allocx, bool strip_quotes = true);
-String? s = str.unescape(allocx, bool allow_unquoted = false);
+String s2 = str.concat(mem, String s2);
+String s = str.copy(mem);
+void str.free(mem);
+String s = str.to_lower_copy(mem);
+String s = str.to_upper_copy(mem);
+String s = str.capitalize_copy(mem);
+String s = str.snake_to_pascal_copy(mem);
+String s = str.pascal_to_snake_copy(mem);
+String s = string::from_struct(mem, struct_x);
+String s = str.escape(mem, bool strip_quotes = true);
+String? s = str.unescape(mem, bool allow_unquoted = false);
 usz len = string::escape_len(String s);
 bool b = string::needs_escape(char c);
 ```
 
-* Note: you need to use same allocator to `str.free(allocx)` that was used to get the string.
+* Note: you need to use same allocator to `str.free(mem)` that was used to get the string.
 
 #### Temporary functions/macros
 
-In C3, we have temporary allocator `tmem` that can be applied to `allocx` above. For convinience, there are many 't'-prefixed functions/macros as follows and they use `tmem` as allocator implicitly.
+In C3, we have temporary allocator `tmem` that can be applied to `mem` above. For convinience, there are many 't'-prefixed functions/macros as follows and they use `tmem` as allocator implicitly.
 
 ```c3
 String s = string::tformat(String fmt, args...);
@@ -200,19 +200,19 @@ Several functions/macros are ready to use to handle `ZString`.
 ```c3
 ZString zstr;
 String str;
-Allocator allocx;
+Allocator mem;
 ZString zs = string::tformat_zstr(String fmt, args...);
 bool b = zstr.eq(ZString other) @operator(==);
 String s = zstr.str_view();
 usz clen = zstr.char_len();
 usz n = zstr.len();
 ZString zs = str.zstr_tcopy();
-String s = zstr.copy(allocx);
-ZString zs = str.zstr_copy(allocx);
+String s = zstr.copy(mem);
+ZString zs = str.zstr_copy(mem);
 String s = zstr.tcopy();
 ```
 
-* Note: `ZString` to `String` is done without extra memory (`zstr.str_view()`), but for `String` to `ZString`, you have to make a whole copy and add extra `'\0'` at the end (`str.zstr_tcopy(), str.zstr_copy(allocx)`).
+* Note: `ZString` to `String` is done without extra memory (`zstr.str_view()`), but for `String` to `ZString`, you have to make a whole copy and add extra `'\0'` at the end (`str.zstr_tcopy(), str.zstr_copy(mem)`).
 
 ### WString
 
@@ -233,17 +233,17 @@ Followings are `WString` related functions/macros.
 ```c3
 String str;
 WString wstr;
-Allocator allocx;
+Allocator mem;
 usz n = wstr.len();
-Char16[]? c16 = str.to_utf16(allocx);
+Char16[]? c16 = str.to_utf16(mem);
 Char16[]? c16 = str.to_temp_utf16();
-WString? ws = str.to_wstring(allocx);
+WString? ws = str.to_wstring(mem);
 WString? ws = str.to_temp_wstring();
-Char32[]? c32 = str.to_utf32(allocx);
+Char32[]? c32 = str.to_utf32(mem);
 Char32[]? c32 = str.to_temp_utf32();
-String? s = string::from_utf32(allocx, Char32[] utf32);
-String? s = string::from_utf16(allocx, Char16[] utf16);
-String? s = string::from_wstring(allocx, WString wstring);
+String? s = string::from_utf32(mem, Char32[] utf32);
+String? s = string::from_utf16(mem, Char16[] utf16);
+String? s = string::from_wstring(mem, WString wstring);
 String? s = string::tfrom_wstring(WString wstring);
 String? s = string::tfrom_utf16(Char16[] utf16);
 usz n = str.utf8_codepoints();
@@ -425,12 +425,12 @@ Functions/macros for `DString` are as follows.
 String str;
 ZString zstr;
 DString dstr;
-Allocator allocx;
-DString ds = dstr.init(allocx, usz capacity = MIN_CAPACITY);
+Allocator mem;
+DString ds = dstr.init(mem, usz capacity = MIN_CAPACITY);
 DString ds = dstr.tinit(usz capacity = MIN_CAPACITY);
-DString ds = dstring::new_with_capacity(allocx, usz capacity);
+DString ds = dstring::new_with_capacity(mem, usz capacity);
 DString ds = dstring::temp_with_capacity(usz capacity);
-DString ds = dstring::new(allocx, String c = "");
+DString ds = dstring::new(mem, String c = "");
 DString ds = dstring::temp(String s = "");
 void dstr.replace_char(char ch, char replacement);
 void dstr.replace(String needle, String replacement);
@@ -448,15 +448,15 @@ void dstr.set(usz index, char c); // @operator([]=)
 void dstr.append_repeat(char c, usz times);
 usz n = dstr.append_char32(Char32 c);
 DString ds = dstr.tcopy();
-DString ds = dstr.copy(allocx);
-ZString zs = dstr.copy_zstr(allocx);
-String s = dstr.copy_str(allocx);
+DString ds = dstr.copy(mem);
+ZString zs = dstr.copy_zstr(mem);
+String s = dstr.copy_str(mem);
 String s = dstr.tcopy_str();
 bool b = dstr.equals(DString other_string);
 void dstr.free();
 bool b = dstr.less(DString other_string);
 void dstr.append_chars(String str);
-Char32[] c32 = dstr.copy_utf32(allocx);
+Char32[] c32 = dstr.copy_utf32(mem);
 void dstr.append_string(DString str);
 void dstr.clear();
 void dstr.append_char(char c);
@@ -471,7 +471,7 @@ usz n =  dstr.insert_utf32_at(usz index, Char32[] chars);
 void dstr.insert_at(usz index, value); // value = String | char[] | Char16[] | Char32 | char | Char16 | Char32
 usz? n = dstr.appendf(String format, args...);
 usz? n = dstr.appendfn(String format, args...);
-DString ds = dstring::join(allocx, String[] s, String joiner);
+DString ds = dstring::join(mem, String[] s, String joiner);
 void dstr.reverse();
 void dstr.reserve(&self, usz addition);
 usz? n = dstr.read_from_stream(&self, InStream reader);

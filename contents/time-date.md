@@ -61,7 +61,7 @@ import std::time::clock;
 
 typedef Clock = ulong;
 
-Clock c = clock::now();
+Clock c = clock::now(); // in nano seconds
 NanoDuration nd = c.mark();
 Clock c = c.add_nano_duration(NanoDuration nano) @operator_s(+);
 Clock c = c.sub_nano_duration(NanoDuration nano) @operator(-);

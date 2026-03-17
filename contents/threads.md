@@ -41,7 +41,7 @@ void thread::yield();
 Thread this_thread = thread::current();
 void thread::exit(int result);
 void? thread::sleep_ms(ulong milliseconds);
-void? thread::sleep(Duration d) @maydiscard;
+void? thread::sleep(Duration d) @maydiscard; // micro sec 10^-6
 void? thread::sleep_ns(NanoDuration ns) @maydiscard;
 ```
 ### Mutex
